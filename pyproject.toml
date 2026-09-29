@@ -1,0 +1,61 @@
+[project]
+name = "pepbench-experiments"
+version = "0.1.0"
+description = "Research experiments, notebooks, and results built on top of pepbench and biopsykit."
+authors = [
+    { name = "Luca Abel", email = "luca.abel96@gmail.com" },
+]
+requires-python = ">=3.10,<4.0"
+readme = "README.md"
+license = "MIT"
+dependencies = [
+    # Pin a released pepbench version - never a path or git dependency, so this repo tracks a stable,
+    # reproducible library version instead of moving in lockstep with pepbench's own working tree.
+    "pepbench>=0.2.0,<0.3",
+    "biopsykit>=0.13.2,<0.14",
+    "tpcp>=2",
+    "scikit-learn>=1.2.0",
+    "skops>=0.11",
+    "shap>=0.47.2",
+    "pandas>=2.0.0",
+    "numpy>=1.26,<2",
+    "pingouin>=0.5.2,<0.6",
+    "seaborn>=0,<1",
+    "matplotlib<3.9",
+    "fau-colors~=1.1",
+    "pooch>=1.8.2",
+    "jinja2>=3.1.4,<4",
+    "hpc-helper>=0.3.2",
+    "jupyter>=1.1.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/empkins/pepbench-experiments"
+Repository = "https://github.com/empkins/pepbench-experiments"
+
+[dependency-groups]
+dev = [
+    "black>=25",
+    "ruff>=0,<1",
+    "ipykernel>=6,<7",
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "b_point_ml_experiments/src/b_point_ml_experiments",
+]
+
+[tool.hatch.build.targets.wheel.sources]
+"b_point_ml_experiments/src" = ""
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
