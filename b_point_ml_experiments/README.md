@@ -43,3 +43,11 @@ the pretrained regressor shipped via
 3. Upload the resulting `.skops` file as a GitHub Release asset on this repo, update its SHA256 hash in
    `biopsykit`'s `_B_POINT_ABELSTUEHLER2026_REGISTRY` (`src/biopsykit/signals/icg/event_extraction/_pretrained_models.py`),
    and point `_B_POINT_ABELSTUEHLER2026_RELEASE_URL` at this repo's release download URL.
+
+## Citation
+
+This work is described in an upcoming publication (in preparation):
+
+> [PLACEHOLDER] Abel, L., et al. (in preparation). *<Title TBD>*. <Journal/Conference TBD>.
+
+Citation details will be added here once available.

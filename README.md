@@ -39,3 +39,12 @@ pattern `pepbench.example_data` and `biopsykit`'s pretrained-model loader alread
 This repo was split out of `pepbench`'s `experiments/` directory. At the time of the split, `pepbench/experiments/`
 was left in place as a snapshot for reference; this repo is the actively maintained home for new experiment work
 going forward.
+
+## Citation
+
+The ML-based B-point extraction work in `b_point_ml_experiments/` is described in an upcoming publication (in
+preparation):
+
+> [PLACEHOLDER] Abel, L., et al. (in preparation). *<Title TBD>*. <Journal/Conference TBD>.
+
+Citation details will be added here once available.
