@@ -49,5 +49,5 @@ the pretrained regressor shipped via
 This work is described in:
 
 > Abel L, Stühler S, Steigleder T, Ostgathe C, Rohleder N, Eskofier BM and Richer R (2026) Beat-to-beat aortic
-> valve opening detection from impedance cardiography using machine learning. *Front. Digit. Health* 8:1944092.
-> doi: [10.3389/fdgth.2026.1944092](https://doi.org/10.3389/fdgth.2026.1944092) (accepted, in press)
+> valve opening detection from impedance cardiography using machine learning. *Frontiers in Digital Health*
+> (accepted, in press). Article number and DOI to be added once assigned.
