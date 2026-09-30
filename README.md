@@ -42,9 +42,8 @@ going forward.
 
 ## Citation
 
-The ML-based B-point extraction work in `b_point_ml_experiments/` is described in an upcoming publication (in
-preparation):
+The ML-based B-point extraction work in `b_point_ml_experiments/` is described in:
 
-> [PLACEHOLDER] Abel, L., et al. (in preparation). *<Title TBD>*. <Journal/Conference TBD>.
-
-Citation details will be added here once available.
+> Abel L, Stühler S, Steigleder T, Ostgathe C, Rohleder N, Eskofier BM and Richer R (2026) Beat-to-beat aortic
+> valve opening detection from impedance cardiography using machine learning. *Front. Digit. Health* 8:1944092.
+> doi: [10.3389/fdgth.2026.1944092](https://doi.org/10.3389/fdgth.2026.1944092) (accepted, in press)
