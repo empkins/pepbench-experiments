@@ -3,7 +3,8 @@ name = "pepbench-experiments"
 version = "0.1.0"
 description = "Research experiments, notebooks, and results built on top of pepbench and biopsykit."
 authors = [
-    { name = "Luca Abel", email = "luca.abel96@gmail.com" },
+    { name = "Robert Richer", email = "robert.richer@fau.de" },
+    { name = "Luca Abel", email = "luca.abel@fau.de" },
 ]
 requires-python = ">=3.10,<4.0"
 readme = "README.md"
@@ -11,8 +12,8 @@ license = "MIT"
 dependencies = [
     # Pin a released pepbench version - never a path or git dependency, so this repo tracks a stable,
     # reproducible library version instead of moving in lockstep with pepbench's own working tree.
-    "pepbench>=0.2.0,<0.3",
-    "biopsykit>=0.14.0,<0.15",
+    "pepbench>=0.2.0",
+    "biopsykit>=0.14.0",
     "tpcp>=2",
     "scikit-learn>=1.2.0",
     "skops>=0.11",
