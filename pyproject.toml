@@ -39,6 +39,7 @@ dev = [
     "black>=25",
     "ruff>=0,<1",
     "ipykernel>=6,<7",
+    "poethepoet>=0.33.0",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -60,3 +61,16 @@ target-version = ['py310']
 [tool.ruff]
 line-length = 120
 target-version = "py310"
+
+[tool.poe.tasks]
+_format = "ruff format ."
+_auto_fix = "ruff check . --fix-only --show-fixes --exit-zero"
+_auto_fix_unsafe = "ruff check . --fix-only --show-fixes --exit-zero --unsafe-fixes"
+format = ["_auto_fix", "_format"]
+format_unsafe = ["_auto_fix_unsafe", "_format"]
+lint = { cmd = "ruff check . --fix", help = "Lint all files with ruff." }
+_lint_ci = "ruff check . --output-format=github"
+_check_format = "ruff format . --check"
+ci_check = { sequence = ["_check_format", "_lint_ci"], help = "Check all potential format and linting issues." }
+conf_jupyter = { cmd = "python -m ipykernel install --user --name pepbench-experiments --display-name pepbench-experiments", help = "Add a new jupyter kernel for the project."}
+remove_jupyter = { cmd = "jupyter kernelspec uninstall pepbench-experiments", help = "Remove the project specific jupyter kernel."}
