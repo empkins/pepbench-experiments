@@ -12,7 +12,7 @@ license = "MIT"
 dependencies = [
     # Pin a released pepbench version - never a path or git dependency, so this repo tracks a stable,
     # reproducible library version instead of moving in lockstep with pepbench's own working tree.
-    "pepbench>=0.2.0",
+    "pepbench>=0.3.0",
     "biopsykit>=0.14.0",
     "tpcp>=2",
     "scikit-learn>=1.2.0",
@@ -33,6 +33,11 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/empkins/pepbench-experiments"
 Repository = "https://github.com/empkins/pepbench-experiments"
+
+[tool.uv.sources]
+# Local development: use the editable pepbench checkout next to this repo instead of the PyPI release.
+# Remove this before releasing, so the lockfile pins a released pepbench version again.
+pepbench = { path = "../pepbench", editable = true }
 
 [dependency-groups]
 dev = [

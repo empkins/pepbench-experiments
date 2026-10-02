@@ -1,10 +1,12 @@
 """Loading and error-computation helpers for the B-point ML-regression experiments.
 
-Ported verbatim from ``pepbench.io._ml_helper`` (see this package's top-level docstring for why).
+Ported verbatim from ``pepbench.io._ml_helper`` and the ``SklearnPipelinePermuter`` helpers in ``pepbench.io._io``
+(``get_best_pipeline_results``, ``get_best_estimator``, ``get_pipeline_steps``) - see this package's top-level
+docstring for why.
 """
 
 from pathlib import Path
-from typing import Optional, TypeVar
+from typing import Any, Optional, TypeVar
 
 import numpy as np
 import pandas as pd
@@ -17,6 +19,9 @@ __all__ = [
     "compute_error",
     "compute_mae_std_from_metric_summary",
     "compute_mae_std_from_permuter",
+    "get_best_estimator",
+    "get_best_pipeline_results",
+    "get_pipeline_steps",
     "impute_missing_values",
     "load_preprocessed_training_data",
 ]
@@ -214,3 +219,126 @@ def impute_missing_values(input_data: pd.DataFrame, mode: Optional[str] = "media
         input_data.iloc[sample, np.isnan(input_data.iloc[sample, :].values)] = imputation_values[sample]
 
     return input_data
+
+
+def get_best_pipeline_results(
+    pipeline_permuter: SklearnPipelinePermuter,
+    metric: str | None = "mean_absolute_error",
+) -> pd.DataFrame:
+    """
+    Get the best performing algorithm from the metric summary of the SklearnPipelinePermuter.
+
+    Parameters
+    ----------
+    pipeline_permuter: class biopsykit.classification.model_selection.SklearnPipelinePermuter
+        The pipeline permuter object containing the prediction results and metric performances.
+    metric: str, optional
+        The metric that was used for scoring in the SklearnPipelinePermuter. Default ``"mean_absolute_error"``
+
+    Returns
+    -------
+    pd.DataFrame
+        The prediction and metric performance results of the best estimator.
+
+    """
+    if metric == "mean_absolute_error":
+        sklearn_metric = "mean_test_neg_mean_absolute_error"
+    else:
+        raise KeyError("Specified metric is not implemented yet!")
+
+    assert sklearn_metric in pipeline_permuter.metric_summary().columns, (
+        "Specified metric is not used in the pipeline permuter!"
+    )
+    return (
+        pipeline_permuter.metric_summary()
+        .iloc[pipeline_permuter.metric_summary()["mean_test_neg_mean_absolute_error"].argmin()]
+        .to_frame()
+        .T
+    )
+
+
+def get_best_estimator(
+    pipeline_permuter: SklearnPipelinePermuter,
+    metric: str | None = "mean_absolute_error",
+) -> tuple[Any, tuple[str, ...]]:
+    """
+    Get the best estimator object and its underlying pipeline combination.
+
+    Parameters
+    ----------
+    pipeline_permuter: class biopsykit.classification.model_selection.SklearnPipelinePermuter
+        The pipeline permuter object containing the prediction results and metric performances.
+    metric: str, optional
+        The metric that was used for scoring in the SklearnPipelinePermuter. Default ``"mean_absolute_error"``
+
+    Returns
+    -------
+    tuple of _PipelineWrapper and tuple
+        The results as a tuple containing of the biopsykit.classification.utils._PipelineWrapper object and a tuple of
+        strings containing the underlying pipeline combination.
+    """
+    if metric == "mean_absolute_error":
+        sklearn_metric = "mean_test_neg_mean_absolute_error"
+    else:
+        raise KeyError("Specified metric is not implemented yet!")
+
+    assert sklearn_metric in pipeline_permuter.metric_summary().columns, (
+        "Specified metric is not used in the pipeline permuter!"
+    )
+    best_estimator_name = (
+        pipeline_permuter.metric_summary().iloc[pipeline_permuter.metric_summary()[sklearn_metric].argmin()].name
+    )
+    return pipeline_permuter.best_estimator_summary().loc[best_estimator_name].iloc[0], best_estimator_name
+
+
+def get_pipeline_steps(
+    pipeline_permuter: SklearnPipelinePermuter,
+    input_data: pd.DataFrame,
+    metric: str | None = "mean_absolute_error",
+    step: str | None = "reduce_dim",
+    scaler: bool | None = True,
+) -> list[list[str]]:
+    """
+    Gain further insights in the components of your model. E.g. recieve the features selected by the model.
+
+    Parameters
+    ----------
+    pipeline_permuter: class biopsykit.classification.model_selection.SklearnPipelinePermuter
+        The pipeline permuter object containing the prediction results and metric performances.
+    input_data: pd.DataFrame
+        The data that was used to train the models.
+    metric: str, optional
+        The metric that was used for scoring in the SklearnPipelinePermuter. Default ``"mean_absolute_error"``
+    step: str, optional
+        The step of interest. Default ``"reduce_dim"``
+    scaler: str, optional
+        Specifies whether scaling was considered in the model. Default ``True``
+
+    Results
+    -------
+    list
+        List of selected features for each pipeline in the best_estimator object.
+
+    """
+    best_estimator, best_estimator_name = get_best_estimator(pipeline_permuter=pipeline_permuter, metric=metric)
+    reduce_dim_model = ""
+    selected_features = []
+    selected_feature_mask = None
+
+    if scaler:
+        if step == "reduce_dim":
+            reduce_dim_model = best_estimator_name[1]
+        else:
+            raise KeyError("Specified step is not supported yet!")
+    elif step == "reduce_dim":
+        reduce_dim_model = best_estimator_name[0]
+    else:
+        raise KeyError("Specified step is not supported yet!")
+
+    for pipeline in best_estimator.pipeline:
+        if reduce_dim_model in {"RFE", "SelectKBest"}:
+            selected_feature_mask = pipeline.named_steps["reduce_dim"].get_support()
+        else:
+            raise KeyError("The model used in your pipeline is not supported yet!")
+        selected_features.append(input_data.columns[selected_feature_mask].to_list())
+    return selected_features
